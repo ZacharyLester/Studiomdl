@@ -1,0 +1,13 @@
+name: build
+on: [push, workflow_dispatch]
+jobs:
+  win32:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y gcc-mingw-w64-i686
+      - run: make CC=i686-w64-mingw32-gcc ARCH=-m32 EXE=.exe PLATFORM_FLAGS=
+      - uses: actions/upload-artifact@v4
+        with:
+          name: studiomdl-win32
+          path: build/bin-i386/studiomdl.exe
