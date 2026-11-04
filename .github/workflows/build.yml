@@ -8,7 +8,9 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y gcc-mingw-w64-i686
       - run: sed -i -E '/^\s*#\s*include\s*</ s/<([^>]+)>/\L<\1>/' src/*.c src/*.h
       - run: sed -i 's/\bfilelength\b/q_filelength/g' src/*.c src/*.h
-      - run: sed -i -E -e 's/\b(u?int32)\b/\1_t/g' -e '1i #include <stdint.h>' src/studio.h
+      - run: |
+          sed -i -E 's/\b(u?int32)\b/\1_t/g' src/studio.h
+          sed -i '1i #include <stdint.h>' src/studio.h
       - run: make CC=i686-w64-mingw32-gcc ARCH=-m32 EXE=.exe PLATFORM_FLAGS=
       - uses: actions/upload-artifact@v4
         with:
