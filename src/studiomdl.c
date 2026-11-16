@@ -1405,11 +1405,23 @@ void Grab_BMP ( char *filename, s_texture_t *ptexture )
 void ResizeTexture( s_texture_t *ptexture )
 {
 	int		i, j, s, t;
-    byte	*pdest;
+	byte	*pdest;
 	int		srcadjwidth;
 
-// make the width a multiple of 4; some hardware requires this, and it ensures
-// dword alignment for each scan
+	// UV range can't usefully exceed the source bitmap: the copy below wraps anyway
+	if ((ptexture->max_s - ptexture->min_s) + 1 > ptexture->srcwidth)
+	{
+		ptexture->min_s = 0;
+		ptexture->max_s = ptexture->srcwidth - 1;
+	}
+	if ((ptexture->max_t - ptexture->min_t) + 1 > ptexture->srcheight)
+	{
+		ptexture->min_t = 0;
+		ptexture->max_t = ptexture->srcheight - 1;
+	}
+
+	// make the width a multiple of 4; some hardware requires this, and it ensures
+	// dword alignment for each scan
 
 	ptexture->skintop = ptexture->min_t;
 	ptexture->skinleft = ptexture->min_s;
@@ -1464,7 +1476,6 @@ void ResizeTexture( s_texture_t *ptexture )
 	free( ptexture->ppicture );
 	free( ptexture->ppal );
 }
-
 
 void Grab_Skin ( s_texture_t *ptexture )
 {
