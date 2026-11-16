@@ -1408,6 +1408,15 @@ void ResizeTexture( s_texture_t *ptexture )
 	byte	*pdest;
 	int		srcadjwidth;
 
+	// texture never touched by any triangle (min/max still at init values): use the whole bitmap
+	if (ptexture->min_s > ptexture->max_s || ptexture->min_t > ptexture->max_t)
+	{
+		ptexture->min_s = 0;
+		ptexture->max_s = ptexture->srcwidth - 1;
+		ptexture->min_t = 0;
+		ptexture->max_t = ptexture->srcheight - 1;
+	}
+
 	// UV range can't usefully exceed the source bitmap: the copy below wraps anyway
 	if ((ptexture->max_s - ptexture->min_s) + 1 > ptexture->srcwidth)
 	{
