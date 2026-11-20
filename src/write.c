@@ -252,6 +252,7 @@ byte *WriteAnimations( byte *pData, byte *pStart, int group )
 {
 	int i, j, k;
 	int	q, n;
+	int	offset;
 
 	mstudioanim_t		*panim;
 	mstudioanimvalue_t	*panimvalue;
@@ -283,7 +284,11 @@ byte *WriteAnimations( byte *pData, byte *pStart, int group )
 						}
 						else
 						{
-							panim->offset[k] = ((byte *)panimvalue - (byte *)panim);
+							offset = (byte *)panimvalue - (byte *)panim;
+							if (offset > 65535)
+								Error( "sequence \"%s\" is greater than 64K (blend %d, bone %d, channel %d)\n", sequence[i].name, q, j, k );
+
+							panim->offset[k] = offset;
 							for (n = 0; n < sequence[i].panim[q]->numanim[j][k]; n++)
 							{
 								panimvalue->value = sequence[i].panim[q]->anim[j][k][n].value;
