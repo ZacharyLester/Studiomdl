@@ -5,13 +5,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: sudo apt-get update && sudo apt-get install -y gcc-mingw-w64-i686
+      - uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: gcc-mingw-w64-i686-win32
+          version: 1.0
       - run: sed -i -E '/^\s*#\s*include\s*</ s/<([^>]+)>/\L<\1>/' src/*.c src/*.h
       - run: sed -i 's/\bfilelength\b/q_filelength/g' src/*.c src/*.h
       - run: |
           sed -i -E 's/\b(u?int32)\b/\1_t/g' src/studio.h
           sed -i '1i #include <stdint.h>' src/studio.h
-      - run: make CC=i686-w64-mingw32-gcc ARCH=-m32 EXE=.exe PLATFORM_FLAGS= USER_FLAGS=-fcommon
+      - run: make CC=i686-w64-mingw32-gcc-win32 ARCH=-m32 EXE=.exe PLATFORM_FLAGS= USER_FLAGS=-fcommon
       - uses: actions/upload-artifact@v4
         with:
           name: studiomdl-win32
