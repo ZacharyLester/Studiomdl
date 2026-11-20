@@ -264,7 +264,7 @@ typedef struct
 
 typedef struct
 {
-	unsigned short	offset[6];
+	int		offset[6];
 } mstudioanim_t;
 
 // animation frames

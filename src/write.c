@@ -291,8 +291,6 @@ byte *WriteAnimations( byte *pData, byte *pStart, int group )
 							}
 						}
 					}
-					if (((byte *)panimvalue - (byte *)panim) > 65535)
-						Error("sequence \"%s\" is greate than 64K\n", sequence[i].name );
 					panim++;
 				}
 			}
